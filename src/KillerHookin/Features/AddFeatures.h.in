@@ -1,0 +1,38 @@
+#pragma once
+
+#include "Common/Globals.h"
+
+//{EMPLACE_INCLUDES_HERE}//
+namespace Features
+{
+	void InitializeFeatures()
+	{
+		for (int i = 0\; i < Globals::g_features.size()\; i++)
+			if (!Globals::g_features[i]->Initialize())
+				Globals::g_features.erase(Globals::g_features.begin() + i)\;
+		Globals::g_features.shrink_to_fit()\;
+	}
+
+	void DeinitializeFeatures()
+	{
+		for (auto& feature : Globals::g_features)
+			feature->Deinitialize()\;
+		Globals::g_features.clear()\;
+	}
+
+	void UpdateFeatures(uint32_t delta)
+	{
+		for (auto& feature : Globals::g_features)
+			feature->Update(delta)\;
+	}
+
+	void AddFeatures()
+	{
+		if (Globals::g_features.size())
+			DeinitializeFeatures()\;
+		else
+			Globals::g_features.reserve(8)\;
+
+		//{EMPLACE_FEATURES_HERE}//
+	}
+}
